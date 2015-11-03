@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/hyc-projects/!svn/ver/9411/CppProj/ATS2.0/trunk/2.0/plugins/com.hyc.httpsserver/src/certificate
+END
+server-cert.key
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/hyc-projects/!svn/ver/9411/CppProj/ATS2.0/trunk/2.0/plugins/com.hyc.httpsserver/src/certificate/server-cert.key
+END
+client-cert.pem
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/hyc-projects/!svn/ver/9411/CppProj/ATS2.0/trunk/2.0/plugins/com.hyc.httpsserver/src/certificate/client-cert.pem
+END
+ca-cert.pem
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/hyc-projects/!svn/ver/9411/CppProj/ATS2.0/trunk/2.0/plugins/com.hyc.httpsserver/src/certificate/ca-cert.pem
+END
+server-cert.pem
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/hyc-projects/!svn/ver/9411/CppProj/ATS2.0/trunk/2.0/plugins/com.hyc.httpsserver/src/certificate/server-cert.pem
+END
