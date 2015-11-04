@@ -3,11 +3,13 @@
 class HYCMySSLClient : public HYCSSLClient {
 public:
     explicit HYCMySSLClient(const boost::asio::ip::address &addr,
-                           unsigned short port,
-                           const std::string &ca_verify_file_path,
-                           const std::string &local_certificate_file_path,
+                            int port,
+                            const std::string &ca_verify_file_path,
+                            const std::string &local_certificate_file_path,
                             const std::string &local_private_file_path)
-        : HYCSSLClient(addr, port, ca_verify_file_path, local_certificate_file_path, local_private_file_path)
+        : HYCSSLClient(addr, port, ca_verify_file_path, local_certificate_file_path, local_private_file_path),
+          m_peerAddr(addr.to_string()),
+          m_peerPort(port)
     {
 
     }
@@ -16,9 +18,9 @@ protected:
 
     virtual bool Connected(const std::string &verifyInfo) {
         std::cout << "["
-                  << 1
+                  << m_peerAddr
                   << ":"
-                  << 2
+                  << m_peerPort
                   << "]"
                   << " verifying:"
                   << verifyInfo
@@ -33,9 +35,9 @@ protected:
 
     virtual bool ReadReady(const char* data, size_t len) {
         std::cout << "["
-                  << 1
+                  << m_peerAddr
                   << ":"
-                  << 2
+                  << m_peerPort
                   << "]"
                   << " read:"
                   << std::string(data, len)
@@ -50,9 +52,9 @@ protected:
 
     virtual void HasWrote() {
         std::cout << "["
-                  << 1
+                  << m_peerAddr
                   << ":"
-                  << 2
+                  << m_peerPort
                   << "]"
                   << " write ok"
                   << std::endl;
@@ -60,9 +62,9 @@ protected:
 
     virtual void SessionClosed(const std::string &errorMsg) {
         std::cout << "["
-                  << 1
+                  << m_peerAddr
                   << ":"
-                  << 2
+                  << m_peerPort
                   << "]"
                   << " close: "
                   << errorMsg
@@ -70,7 +72,9 @@ protected:
     }
 
 private:
-    char          m_request[max_length];
+    char                    m_request[max_length];
+    std::string             m_peerAddr;
+    int                     m_peerPort;
 };
 
 int main(int argc, char* argv[])
@@ -83,14 +87,11 @@ int main(int argc, char* argv[])
             return 1;
         }
 
-        boost::asio::ip::address addr;
-        addr.from_string(argv[1]);
-
         std::string ca_verify_file_path = "./certificate/ca-cert.pem";
         std::string local_certificate_file_path = "certificate/client-cert.pem";
         std::string local_private_file_path = "certificate/client-cert.key";
 
-        HYCMySSLClient client(addr,
+        HYCMySSLClient client(boost::asio::ip::address::from_string("127.0.0.1"),
                               std::atoi(argv[2]),
                               ca_verify_file_path,
                               local_certificate_file_path,

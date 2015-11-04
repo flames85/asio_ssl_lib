@@ -15,7 +15,7 @@ class HYCSSLServer
 {
 public:
     explicit HYCSSLServer(const boost::asio::ip::address &addr,
-                          unsigned short port,
+                          int port,
                           const std::string &ca_verify_file_path,
                           const std::string &local_certificate_file_path,
                           const std::string &local_private_file_path);

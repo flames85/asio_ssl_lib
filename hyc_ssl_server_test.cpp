@@ -67,9 +67,9 @@ protected:
     }
 
 private:
-    char         m_buf[max_length];
-    std::string  m_peerAddr;
-    int          m_peerPort;
+    char                    m_buf[max_length];
+    std::string             m_peerAddr;
+    unsigned short          m_peerPort;
 };
 
 /////////////////////////////////////////////////////////////////////////////

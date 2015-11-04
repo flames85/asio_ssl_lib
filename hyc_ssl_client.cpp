@@ -1,7 +1,7 @@
 #include "hyc_ssl_client.h"
 
 HYCSSLClient::HYCSSLClient(const boost::asio::ip::address &addr,
-                           unsigned short port,
+                           int port,
                            const std::string &ca_verify_file_path,
                            const std::string &local_certificate_file_path,
                            const std::string &local_private_file_path)
@@ -104,7 +104,7 @@ void HYCSSLClient::handle_write(const boost::system::error_code& error,
 
         // 异步读
         m_socket->async_read_some(boost::asio::buffer(m_reply, max_length),
-                                 boost::bind(&HYCSSLClient::handle_read,
+                                  boost::bind(&HYCSSLClient::handle_read,
                                               this,
                                               _1,
                                               _2));
@@ -121,11 +121,11 @@ void HYCSSLClient::handle_read(const boost::system::error_code& error,
 {
     if (!error)
     {
-        if(ReadReady(m_reply, bytes_transferred))
+        if(!ReadReady(m_reply, bytes_transferred))
         {
             try
             {
-                 m_socket->lowest_layer().close();
+                m_socket->lowest_layer().close();
             } catch (std::exception& e) {
                 std::cerr << "[HYCSSLClient::handle_handshake]Exception: " << e.what() << std::endl;
             }
