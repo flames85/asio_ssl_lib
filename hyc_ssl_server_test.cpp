@@ -5,25 +5,71 @@
 
 class HYCMySSLSession : public HYCSSLSession
 {
-
 public:
 
 protected:
-    virtual void handle_connected() {
-        std::cout << "### handle_connected" << std::endl;
+    virtual bool NewConnection(const std::string &peerAddr,
+                               int peerPort,
+                               const std::string &subjectName)
+    {
+        std::cout << "["
+                  << peerAddr
+                  << ":"
+                  << peerPort
+                  << "]"
+                  << " verifying:"
+                  << subjectName
+                  << std::endl;
+
+        m_peerAddr = peerAddr;
+        m_peerPort = peerPort;
+
+        return true;
     }
 
-    virtual void handle_readed()  {
-        std::cout << "### handle_readed" << std::endl;
+    virtual bool ReadReady(const char* data, size_t len)  {
+        std::cout << "["
+                  << m_peerAddr
+                  << ":"
+                  << m_peerPort
+                  << "]"
+                  << " read:"
+                  << std::string(data, len)
+                  << std::endl;
+
+
+        // 这里写逻辑, 然后返回
+        WriteMessage("123456789", 9);
+
+        return true;
+
     }
 
-    virtual void handle_wrote()  {
-        std::cout << "### handle_wrote" << std::endl;
+    virtual void HasWrote()  {
+        std::cout << "["
+                  << m_peerAddr
+                  << ":"
+                  << m_peerPort
+                  << "]"
+                  << " write ok"
+                  << std::endl;
     }
 
-    virtual void handle_closed() {
-        std::cout << "### handle_closed" << std::endl;
+    virtual void SessionClosed(const std::string &errorMsg) {
+        std::cout << "["
+                  << m_peerAddr
+                  << ":"
+                  << m_peerPort
+                  << "]"
+                  << " close: "
+                  << errorMsg
+                  << std::endl;
     }
+
+private:
+    char         m_buf[max_length];
+    std::string  m_peerAddr;
+    int          m_peerPort;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -57,7 +103,7 @@ int main(int argc, char* argv[])
     }
     catch (std::exception& e)
     {
-        std::cerr << "Exception: " << e.what() << "\n";
+        std::cerr << "[main]Exception: " << e.what() << "\n";
     }
 
     return 0;

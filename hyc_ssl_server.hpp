@@ -1,12 +1,14 @@
+#include "hyc_ssl_server.h"
 
 template <typename T>
 HYCSSLServer<T>::HYCSSLServer(const boost::asio::ip::address &addr,
-                           unsigned short port,
-                           const std::string &ca_verify_file_path,
-                           const std::string &local_certificate_file_path,
-                           const std::string &local_private_file_path)
-: m_acceptor(m_ioservice, boost::asio::ip::tcp::endpoint(addr, port)),
-  m_context(boost::asio::ssl::context::sslv23)
+                              unsigned short port,
+                              const std::string &ca_verify_file_path,
+                              const std::string &local_certificate_file_path,
+                              const std::string &local_private_file_path)
+: m_ioservice(new boost::asio::io_service()),
+  m_context(boost::asio::ssl::context::sslv23),
+  m_acceptor(*m_ioservice, boost::asio::ip::tcp::endpoint(addr, port))
 {
     m_context.set_options(boost::asio::ssl::context::default_workarounds
                          | boost::asio::ssl::context::no_sslv2
@@ -25,9 +27,9 @@ HYCSSLServer<T>::HYCSSLServer(const boost::asio::ip::address &addr,
 }
 
 template <typename T>
-void HYCSSLServer<T>::Run()
+std::size_t HYCSSLServer<T>::Run()
 {
-    m_ioservice.run();
+    return m_ioservice->run();
 }
 
 template <typename T>
@@ -40,12 +42,12 @@ template <typename T>
 void HYCSSLServer<T>::start_accept()
 {
     HYCSSLSession* new_session = new T();
-    new_session->Init(m_ioservice, m_context);
+    new_session->Init(*m_ioservice, m_context);
     m_acceptor.async_accept(new_session->Socket(),
-                           boost::bind(&HYCSSLServer::handle_accept,
-                                       this,
-                                       new_session,
-                                       boost::asio::placeholders::error));
+                            boost::bind(&HYCSSLServer::handle_accept,
+                                        this,
+                                        new_session,
+                                        boost::asio::placeholders::error));
 }
 
 template <typename T>

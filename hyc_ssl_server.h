@@ -20,7 +20,7 @@ public:
                           const std::string &local_certificate_file_path,
                           const std::string &local_private_file_path);
 
-    void Run();
+    std::size_t Run();
 
 private:
 
@@ -32,9 +32,10 @@ private:
                        const boost::system::error_code& error);
 
 private:
-    boost::asio::io_service         m_ioservice;
-    boost::asio::ip::tcp::acceptor  m_acceptor;
+    boost::asio::io_service         *m_ioservice;
     boost::asio::ssl::context       m_context;
+    boost::asio::ip::tcp::acceptor  m_acceptor;
+
 };
 
 #include "hyc_ssl_server.hpp"
